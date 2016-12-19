@@ -18,4 +18,4 @@
 (re-frame/reg-event-db
   :change-tab
   (fn  [db [_ new-tab]]
-      (assoc-in db [:tabbed-view :tab-opened] new-tab )))
+      (assoc-in db [:tabbed-view :tab-opened] new-tab)))
