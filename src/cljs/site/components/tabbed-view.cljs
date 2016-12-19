@@ -31,7 +31,7 @@
 
 (defn tab-selector [N]
   (let [tab (re-frame/subscribe [:current-tab])]
-    (fn []
+    (fn [N]
       [re-com/h-box
        :gap "100px"
        :children
