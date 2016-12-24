@@ -11,11 +11,20 @@
 ;; (i.e. the first tab is tab 0 and so on)
 
 ;; ----------------------------------------------------------------------------
+;; A Page is a Symbol
+;; -- 'home
+;; -- 'about
+
+;; INTERPRETATION
+;; -- represents the current page that the user is navigated to
+;; ----------------------------------------------------------------------------
 
 ;; A State is a
-;; -- {:tabbed-view Tabbed-View-State}
+;; -- {:tabbed-view Tabbed-View-State
+;;     :current-page Page}
 
 ;; ----------------------------------------------------------------------------
 
 (def default-db
-  {:tabbed-view {:tab-opened 0}})
+  {:tabbed-view {:tab-opened 0}
+   :current-page 'home})

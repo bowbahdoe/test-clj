@@ -7,3 +7,8 @@
  :current-tab
  (fn [db]
    (:tab-opened  (:tabbed-view db))))
+
+(re-frame/reg-sub
+  :current-page
+  (fn [db]
+    (:current-page db)))

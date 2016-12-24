@@ -1,13 +1,17 @@
 (defproject site "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.229"]
-                 [reagent "0.6.0"]
+                 [reagent "0.6.0" :exclusions [cljsjs/react cljsjs/react-dom]]
                  [re-frame "0.9.0"]
+                 [secretary "1.2.3"]
+                 [venantius/accountant "0.1.7"
+                  :exclusions [org.clojure/tools.reader]]
                  [org.clojure/core.async "0.2.391"]
                  [re-com "0.8.3"]
                  [garden "1.3.2"]
                  [ns-tracker "0.3.0"]
-                 [cljs-css-modules "0.2.1"]]
+                 [cljs-css-modules "0.2.1"]
+                 [cljs-react-material-ui "0.2.34"]]
 
   :plugins [[lein-cljsbuild "1.1.4"]
             [lein-garden "0.2.8"]]

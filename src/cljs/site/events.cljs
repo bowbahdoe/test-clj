@@ -18,4 +18,14 @@
 (re-frame/reg-event-db
   :change-tab
   (fn  [db [_ new-tab]]
-      (assoc-in db [:tabbed-view :tab-opened] new-tab)))
+    (assoc-in db [:tabbed-view :tab-opened] new-tab)))
+
+;; ----------------------------------------------------------------------------
+;; EVENT: change-page
+;; ARGS: new-page: Page (def @ db.cljs)
+;; EFFECT: Changes the page to the one supplied by
+;; provided Page
+(re-frame/reg-event-db
+  :change-page
+  (fn [db [_ new-page]]
+    (assoc-in db [:current-page] new-page)))

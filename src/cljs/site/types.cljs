@@ -1,4 +1,5 @@
-;; Module for declaring the structure of basic types
+;; Module for declaring the structure of basic types,
+;; as well as any tests to determine type
 (ns site.types)
 
 ;; |X| A |Vector X| is one of
@@ -23,6 +24,18 @@
 
 ;; |X| A |Sequence X| is a |Union |List-of X| |Vector X||
 
+;; |X| X -> Boolean
+;; Returns whether a data item is a Sequence
+(defn sequence? [possible]
+  (or (vector? possible)
+      (list? possible)))
+
 ;; An N is one of
 ;; -- 0
 ;; -- (inc N)
+
+;; |X| X -> Boolean
+;; Returns whether a data item is an N
+(defn N? [possible-N]
+  (and (>= possible-N 0)
+       (integer? possible-N)))

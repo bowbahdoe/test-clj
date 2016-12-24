@@ -3,8 +3,9 @@
               [re-frame.core :as re-frame]
               [site.events]
               [site.subs]
+              [site.routes :as routes]
               [site.views :as views]
-              [site.config :as config]))
+              [site.config :as config] ))
 
 
 (defn dev-setup []
@@ -18,6 +19,7 @@
                   (.getElementById js/document "app")))
 
 (defn ^:export init []
+  (routes/app-routes)
   (re-frame/dispatch-sync [:initialize-db])
   (dev-setup)
   (mount-root))
