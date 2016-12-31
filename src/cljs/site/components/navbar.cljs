@@ -23,7 +23,6 @@
 
 ;; where :title is the Text that will appear on that nav-button
 ;; and :link is the href to which that nav points
-;; :align says where on the navbar the element appears
 ;; ----------------------------------------------------------------------------
 
 (declare render-nav-element)
