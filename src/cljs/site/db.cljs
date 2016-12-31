@@ -21,10 +21,18 @@
 
 ;; A State is a
 ;; -- {:tabbed-view Tabbed-View-State
-;;     :current-page Page}
+;;     :current-page Page
+;;     :navbar {:expanded? Boolean}
+;;     :game-of-thrones {:characters []
+;;                       :houses []
+;;                       :books []}}
 
 ;; ----------------------------------------------------------------------------
 
 (def default-db
   {:tabbed-view {:tab-opened 0}
-   :current-page 'home})
+   :current-page 'home
+   :navbar {:expanded? false}
+   :game-of-thrones {:characters []
+                     :houses []
+                     :books []}})

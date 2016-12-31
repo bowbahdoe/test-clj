@@ -1,89 +1,35 @@
 (ns site.components.navbar
     (:require [re-frame.core :as re-frame]
               [re-com.core :as re-com]
-              [site.general :refer [enumerate]]
-              [cljs-css-modules.macro :refer-macros [defstyle]]))
+              [reagent.core :as r]
+              [site.general :refer [give-indexed-keys]]
+              [cljs-react-material-ui.reagent :as ui]))
+
 
 ;; ----------------------------------------------------------------------------
-;; An Alignment is one of
-;; -- 'left
-;; -- 'right
-
-;; ----------------------------------------------------------------------------
-;; A Nav-Button-Description is a
-;; -- {:title String
-;;:    :link String
-;;     :align Alignment}
-
-;; ----------------------------------------------------------------------------
-;; A Dropdown-Link-Description is a
-;; -- {:title String
+;; A Nav-Item-Description is a
+;; -- {:label String
 ;;     :link String}
+;; N.B. :link must be a link local to the site eg "/home/" and not a remote
+;; link eg
 
 ;; ----------------------------------------------------------------------------
 ;; A Nav-Dropdown-Description is a
 ;; -- {:title String
 ;;     :align Alignment
-;;     :contents |Sequence Dropdown-Link-Description|
+;;     :contents |Sequence Nav-Description|
 
 ;; ----------------------------------------------------------------------------
 ;; A Nav-Description one of
-;; -- Nav-Button-Description
+;; -- Nav-Item-Description
 ;; -- Nav-Dropdown-Description
 
 ;; where :title is the Text that will appear on that nav-button
 ;; and :link is the href to which that nav points
 ;; :align says where on the navbar the element appears
-
 ;; ----------------------------------------------------------------------------
-(def hover-color "red")
-(defstyle navbar-style
-  [".nav"
-    ["ul" {:list-style-type "none"
-           :margin 0
-           :padding 0
-           :overflow "hidden"
-           :background-color "#333"}]
-    ["li" {:float "left"}]
-    ["li a" {:display "inline-block"
-             :color "white"
-             :text-align "center"
-             :padding "14px 16px"
-             :text-decoration "none"}]
-    [".dropbtn"
-        {:display "inline-block"
-         :color "white"
-         :text-align "center"
-         :padding "14px 16px"
-         :text-decoration "none"}]
-    ["li a:hover" {:background-color hover-color}]
-    [".dropdown:hover .dropbtn" {:background-color hover-color}]
-    ["li.dropbtn" {:display "inline-block"}]
-    ["li.dropbtn" {:display "inline-block"}]
-    [".dropdown-content"
-      {:display "none"
-       :position "absolute"
-       :background-color "#f9f9f9"
-       :min-width "160px"
-       :box-shadow "0px 8px 16px 0px rgba(0,0,0,0.2)"}]
-    [".dropdown-content a"
-      {:color "black"
-       :padding "12px 16px"
-       :text-decoration "none"
-       :display "block"
-       :text-align "left"}]
-    [".dropdown-content a:hover"
-      {:background-color "#f1f1f1"}]
-    [".dropdown:hover .dropdown-content" {:display "block"}]])
 
-;; |Sequence Nav-Description| -> |Sequence Nav-Description|
-;; Sorts the given sequence of Nav-Descriptions by left and right
-;; alignment. Preserves relative order of left and right aligned
-;; descriptions
-(defn sort-by-alignment [descriptions]
-  (concat (filter #(= 'left (:align %)) descriptions)
-          (filter #(= 'right (:align %)) descriptions)))
-
+(declare render-nav-element)
 ;; ----------------------------------------------------------------------------
 ;; Nav-Description -> Boolean
 ;; returns whether a given nav-description is a dropdown
@@ -91,32 +37,23 @@
   (not (= nil (:contents nav-description))))
 
 ;; ----------------------------------------------------------------------------
-;; Nav-Button-Description -> HTML
+;; Nav-Item-Description -> HTML
 ;; Renders the given description of a nav button as HTML
 (defn render-button [button-desc]
-  (if (= (:align button-desc) 'right)
-    [:li {:style {:float "right"}}
-      [:a {:href (:link button-desc)}
-          (:title button-desc)]]
-    [:li {:style {:float "left"}}
-      [:a {:href (:link button-desc)}
-          (:title button-desc)]]))
+    [ui/list-item {:primaryText (:title button-desc)
+                   :href (:link button-desc)}])
 
 ;; ----------------------------------------------------------------------------
 ;; Nav-Dropdown-Description -> HTML
 ;; renders the given Nav-Dropdown-Description to HTML
 (defn render-dropdown [dropdown-desc]
-  (if (= (:align dropdown-desc) 'right)
-    [:li {:class "dropdown" :style {:float "right"}}
-      [:div {:class "dropbtn"}
-        'Dropdown
-        [:div {:class "dropdown-content"}
-          [:a {:href "#"} "Link 1"]]]]
-    [:li {:class "dropdown" :style {:float "right"}}
-      [:a {:href "javascript:void(0)" :class "dropbtn"}
-        'Dropdown
-        [:div {:class "dropdown-content"}
-          [:a {:href "#"} "Link 1"]]]]))
+  [ui/list-item {:primaryText (:title dropdown-desc)
+                 :initiallyOpen false
+                 :primaryTogglesNestedList true
+                 :nested-items (map r/as-element
+                                  (give-indexed-keys
+                                    (map render-nav-element
+                                      (:contents dropdown-desc))))}])
 
 ;; ----------------------------------------------------------------------------
 ;; Nav-Description -> HTML
@@ -126,14 +63,24 @@
     (render-dropdown nav-description)
     (render-button nav-description)))
 
+;; nil -> nil
+;; Dispatches the :toggle-navbar-expansion event
+(def toggle-nav #(re-frame/dispatch [:toggle-navbar-expansion]))
+
 ;; ----------------------------------------------------------------------------
-;; & Nav-Description -> HTML
-;; Renders the descriptions as HTML.
-;; N.B. Descriptions with an :align of 'right are shuffled to
-;; the right on the arguments list of those with an :align
-;; of 'left in the rendering
-(defn navbar [& descs]
-  [:div {:class-name (:nav navbar-style)}
-    [:ul
-      (for [[index des] (enumerate (sort-by-alignment descs))]
-        (with-meta (render-nav-element des) {:key index}))]])
+;; String & Nav-Description -> HTML
+;; Takes the Title for the nav-bar and a variable number of Nav-Descriptions
+;; and renders a basic navbar
+(defn navbar [title & descs]
+  (let [open? (re-frame/subscribe [:navbar-expanded?])]
+    (fn [title & descs]
+      [ui/mui-theme-provider
+        [:div
+          [ui/app-bar {:title title
+                       :onLeftIconButtonTouchTap toggle-nav}]
+            [ui/drawer {:docked false
+                        :width 200
+                        :open @open?
+                        :onRequestChange toggle-nav}
+              [ui/list
+                (give-indexed-keys (map render-nav-element descs))]]]])))

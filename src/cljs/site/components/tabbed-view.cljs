@@ -1,8 +1,10 @@
 (ns site.components.tabbed-view
   (:require [re-frame.core :as re-frame]
             [re-com.core :as re-com]
-            [site.general :refer [enumerate]]))
+            [reagent.core :as r]
+            [site.general :refer [enumerate give-indexed-keys]]))
 
+(def tab (r/atom 0))
 ;; ----------------------------------------------------------------------------
 ;; N, HTML -> HTML
 ;; Returns a view of the given content that will only render if
@@ -10,11 +12,10 @@
 ;; otherwise
 
 (defn tabbed-content [tab-number content]
-  (let [tab (re-frame/subscribe [:current-tab])]
-    (if (= @tab tab-number)
-      [:div content]
-      [:div {:style {:display "none"}}
-            content])))
+  (if (= @tab tab-number)
+    [:div content]
+    [:div {:style {:display "none"}}
+          content]))
 
 ;; ----------------------------------------------------------------------------
 ;; N -> |nil -> nil|
@@ -22,7 +23,8 @@
 ;; the one given by N
 
 (defn make-switcher [N]
-  (fn [] (re-frame/dispatch [:change-tab N])))
+  #(reset! tab N))
+  ;;(fn [] (re-frame/dispatch [:change-tab N])))
 
 ;; ----------------------------------------------------------------------------
 ;; N -> HTML
@@ -30,18 +32,16 @@
 ;; switcher with N tabs
 
 (defn tab-selector [N]
-  (let [tab (re-frame/subscribe [:current-tab])]
-    [re-com/h-box
-      :gap "100px"
-      :children
-      (let [t @tab]
-        (for [i (range N)]
-            ^{:key i}
-            (if (= i t)
-                [:h1 {:style {:color "red"}}
-                    (str "Tab " i)]
-                [:h1 {:on-click (make-switcher i)}
-                     (str "Tab " i)])))]))
+  [:div
+  (give-indexed-keys
+  (doall
+    (for [i (range N)]
+        ^{:key i}
+        (if (= i @tab)
+          [:h1 {:style {:color "red"}}
+            (str "Tab " i)]
+          [:h1 {:on-click (make-switcher i)}
+            (str "Tab " i)]))))])
 
 ;; ----------------------------------------------------------------------------
 ;; & HTML -> HTML

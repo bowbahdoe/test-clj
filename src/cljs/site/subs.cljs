@@ -12,3 +12,8 @@
   :current-page
   (fn [db]
     (:current-page db)))
+
+(re-frame/reg-sub
+  :navbar-expanded?
+  (fn [db]
+    (:expanded? (:navbar db))))

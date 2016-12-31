@@ -8,24 +8,36 @@
             [re-com.core :as re-com]
             [site.components.tabbed-view :as tv]
             [site.components.navbar :as nav]
-            [site.components.glyph :refer [glyph]]))
+            [site.components.glyph :refer [glyph]]
+            [site.game-of-thrones]))
+
 
 
 ;; ----------------------------------------------------------------------------
 (defn main-panel []
-  (let [side? (r/atom false)] (fn []
-  [ui/mui-theme-provider
-    [re-com/v-box
-     :height "100%"
-     :width "100%"
-     :children
-     [[ui/app-bar {:onLeftIconButtonTouchTap #(do (prn @side?)(swap! side? not))
-                   :title "Menu"}]
-      [ui/drawer {:open @side?
-                  :docked false
-                  :width 200
-                  :onRequestChange #(do (prn @side?)(swap! side? not))}
-        [ui/menu-item {:onTouchTap  #(swap! side? not)} "ITEMS!"]
-        [ui/menu-item {:onTouchTap  #(swap! side? not)} "MORE ITEMS!"]
-        [ui/menu-item {:onTouchTap  #(js/alert "adwwdaawdawdawd")} "MORE ITEMdS!"]]]]])))
+  (fn []
+    (def chart js/window.Recharts)
+    [:div
+      [nav/navbar "title"
+        {:title "Title 1" :link "/link1"}
+        {:title "Title 4"
+         :contents [{:title "some link"
+                     :link "/about"}]}]
+     [:h2 @(re-frame/subscribe [:current-page])]
+     [:> chart.ResponsiveContainer {:minHeight 200}
+        [:> chart.LineChart {:width 500
+                             :height 300
+                             :data [{:name "blah" :val 5}
+                                    {:name "wow" :val 2}
+                                    {:name "b3dlah" :val 4}
+                                    {:name "b3lah" :val 8}
+                                    {:name "bl332ah" :val 4}
+                                    {:name "bla2h" :val 3}]}
+        [:> chart.XAxis {:dataKey "name"}]
+        [:> chart.YAxis]
+        [:> chart.CartesianGrid {:stroke "#eee"
+                                 :strokeDasharray "5 5"}]
+        [:> chart.Line {:type "monotone"
+                        :dataKey "val"
+                        :stroke "#8884d8"}]]]]))
 ;; ============================================================================

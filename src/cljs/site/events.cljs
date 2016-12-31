@@ -29,3 +29,8 @@
   :change-page
   (fn [db [_ new-page]]
     (assoc-in db [:current-page] new-page)))
+
+(re-frame/reg-event-db
+  :toggle-navbar-expansion
+  (fn [db _]
+    (update-in db [:navbar :expanded?] not)))

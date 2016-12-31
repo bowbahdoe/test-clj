@@ -22,6 +22,10 @@
 ;; -- X
 ;; -- Y
 
+;; |X| A |Lazy-Seq X| is one of
+;; -- '()
+;; -- (lazy-seq (cons X |Lazy-Seq X|))
+
 ;; |X| A |Sequence X| is a |Union |List-of X| |Vector X||
 
 ;; |X| X -> Boolean
