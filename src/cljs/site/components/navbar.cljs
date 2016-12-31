@@ -10,8 +10,6 @@
 ;; A Nav-Item-Description is a
 ;; -- {:label String
 ;;     :link String}
-;; N.B. :link must be a link local to the site eg "/home/" and not a remote
-;; link eg
 
 ;; ----------------------------------------------------------------------------
 ;; A Nav-Dropdown-Description is a
