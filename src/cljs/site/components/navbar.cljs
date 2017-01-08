@@ -2,9 +2,9 @@
     (:require [re-frame.core :as re-frame]
               [re-com.core :as re-com]
               [reagent.core :as r]
-              [site.general :refer [give-indexed-keys]]
-              [cljs-react-material-ui.reagent :as ui]))
-
+              [reagent.interop :refer-macros [$]]
+              [site.dependencies :refer [material-ui]]
+              [site.general :refer [give-indexed-keys]]))
 
 ;; ----------------------------------------------------------------------------
 ;; A Nav-Item-Description is a
@@ -40,14 +40,16 @@
 ;; Nav-Item-Description -> HTML
 ;; Renders the given description of a nav button as HTML
 (defn render-button [button-desc]
-    [ui/list-item {:primaryText (:title button-desc)
-                   :href (:link button-desc)}])
+    [:> ($ material-ui :ListItem)
+        {:primaryText (:title button-desc)
+        :href (:link button-desc)}])
 
 ;; ----------------------------------------------------------------------------
 ;; Nav-Dropdown-Description -> HTML
 ;; renders the given Nav-Dropdown-Description to HTML
 (defn render-dropdown [dropdown-desc]
-  [ui/list-item {:primaryText (:title dropdown-desc)
+  [:> ($ material-ui :ListItem)
+    {:primaryText (:title dropdown-desc)
                  :initiallyOpen false
                  :primaryTogglesNestedList true
                  :nested-items (map r/as-element
@@ -74,13 +76,15 @@
 (defn navbar [title & descs]
   (let [open? (re-frame/subscribe [:navbar-expanded?])]
     (fn [title & descs]
-      [ui/mui-theme-provider
+      [:> ($ material-ui :MuiThemeProvider)
         [:div
-          [ui/app-bar {:title title
-                       :onLeftIconButtonTouchTap toggle-nav}]
-            [ui/drawer {:docked false
+          [:> ($ material-ui :AppBar)
+                    {:title title
+                     :onLeftIconButtonTouchTap toggle-nav}]
+            [:> ($ material-ui :Drawer)
+                       {:docked false
                         :width 200
                         :open @open?
                         :onRequestChange toggle-nav}
-              [ui/list
+              [:> ($ material-ui :List)
                 (give-indexed-keys (map render-nav-element descs))]]]])))

@@ -11,13 +11,14 @@
                  [garden "1.3.2"]
                  [ns-tracker "0.3.0"]
                  [cljs-css-modules "0.2.1"]
-                 [cljs-react-material-ui "0.2.34"]]
+                 [cljs-ajax "0.5.8"]
+                 [com.cognitect/transit-cljs "0.8.239"]]
+
 
   :plugins [[lein-cljsbuild "1.1.4"]
             [lein-garden "0.2.8"]]
 
   :min-lein-version "2.5.3"
-
   :source-paths ["src/clj"]
 
   :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"
@@ -42,6 +43,7 @@
 
   :cljsbuild
   {:builds
+
    [{:id           "dev"
      :source-paths ["src/cljs"]
      :figwheel     {:on-jsload "site.core/mount-root"}
@@ -50,9 +52,9 @@
                     :output-dir           "resources/public/js/compiled/out"
                     :asset-path           "js/compiled/out"
                     :source-map-timestamp true
+                    :optimizations   :none
                     :preloads             [devtools.preload]
-                    :external-config      {:devtools/config {:features-to-install :all}}
-                    }}
+                    :external-config      {:devtools/config {:features-to-install :all}}}}
 
     {:id           "min"
      :source-paths ["src/cljs"]
@@ -60,14 +62,17 @@
                     :output-to       "resources/public/js/compiled/app.js"
                     :optimizations   :advanced
                     :closure-defines {goog.DEBUG false}
-                    :pretty-print    false}}
+                    :pretty-print    false
+                    :foreign-libs [{ :file "resources/public/js/bundle.js"
+                                 :provides  ["site.dependencies"]}]}}
 
     {:id           "test"
      :source-paths ["src/cljs" "test/cljs"]
      :compiler     {:main          site.runner
                     :output-to     "resources/public/js/compiled/test.js"
                     :output-dir    "resources/public/js/compiled/test/out"
-                    :optimizations :none}}
+                    :optimizations :whitespace
+                    :preamble ["../resources/public/js/bundle.js"]}}
     ]}
 
   )

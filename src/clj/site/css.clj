@@ -2,5 +2,5 @@
 (ns site.css
   (:require [garden.def :refer [defstyles]]))
 
-(defstyles screen
+(defstyles site
   [:body {}])
