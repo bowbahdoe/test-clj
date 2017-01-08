@@ -10,13 +10,10 @@
 ;; A Nav-Item-Description is a
 ;; -- {:label String
 ;;     :link String}
-;; N.B. :link must be a link local to the site eg "/home/" and not a remote
-;; link eg
 
 ;; ----------------------------------------------------------------------------
 ;; A Nav-Dropdown-Description is a
 ;; -- {:title String
-;;     :align Alignment
 ;;     :contents |Sequence Nav-Description|
 
 ;; ----------------------------------------------------------------------------
@@ -26,7 +23,6 @@
 
 ;; where :title is the Text that will appear on that nav-button
 ;; and :link is the href to which that nav points
-;; :align says where on the navbar the element appears
 ;; ----------------------------------------------------------------------------
 
 (declare render-nav-element)
