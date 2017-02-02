@@ -4,6 +4,7 @@
                  [reagent "0.6.0" :exclusions [cljsjs/react cljsjs/react-dom]]
                  [re-frame "0.9.0"]
                  [secretary "1.2.3"]
+                 [cljsjs/material-ui "0.16.7-0"]
                  [venantius/accountant "0.1.7"
                   :exclusions [org.clojure/tools.reader]]
                  [org.clojure/core.async "0.2.391"]
@@ -62,17 +63,13 @@
                     :output-to       "resources/public/js/compiled/app.js"
                     :optimizations   :advanced
                     :closure-defines {goog.DEBUG false}
-                    :pretty-print    false
-                    :foreign-libs [{ :file "resources/public/js/bundle.js"
-                                 :provides  ["site.dependencies"]}]}}
+                    :pretty-print    false}}
 
     {:id           "test"
      :source-paths ["src/cljs" "test/cljs"]
      :compiler     {:main          site.runner
                     :output-to     "resources/public/js/compiled/test.js"
-                    :output-dir    "resources/public/js/compiled/test/out"
-                    :optimizations :whitespace
-                    :preamble ["../resources/public/js/bundle.js"]}}
+                    :output-dir    "resources/public/js/compiled/test/out"}}
     ]}
 
   )

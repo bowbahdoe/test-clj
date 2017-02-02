@@ -12,15 +12,6 @@
    db/default-db))
 
 ;; ----------------------------------------------------------------------------
-;; EVENT: change-tab
-;; ARGS: new-tab: N
-;; EFFECT: Changes the currently selected tab
-(re-frame/reg-event-db
-  :change-tab
-  (fn  [db [_ new-tab]]
-    (assoc-in db [:tabbed-view :tab-opened] new-tab)))
-
-;; ----------------------------------------------------------------------------
 ;; EVENT: change-page
 ;; ARGS: new-page: Page (def @ db.cljs)
 ;; EFFECT: Changes the page to the one supplied by

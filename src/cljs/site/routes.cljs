@@ -6,8 +6,8 @@
 
 (defroute "/home" []
   (re-frame/dispatch [:change-page 'home]))
-(defroute "/about" []
-  (re-frame/dispatch [:change-page 'about]))
+(defroute "/jobs" []
+  (re-frame/dispatch [:change-page 'jobs]))
 
 
 

@@ -1,7 +1,6 @@
 (ns site.core
     (:require [reagent.core :as reagent]
               [re-frame.core :as re-frame]
-              [site.dependencies]
               [site.events]
               [site.subs]
               [site.routes :as routes]

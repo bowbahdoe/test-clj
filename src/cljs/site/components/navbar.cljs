@@ -3,13 +3,17 @@
               [re-com.core :as re-com]
               [reagent.core :as r]
               [reagent.interop :refer-macros [$]]
-              [site.dependencies :refer [material-ui]]
+              [cljsjs.material-ui]
               [site.general :refer [give-indexed-keys]]))
 
+(def material-ui js/MaterialUI)
 ;; ----------------------------------------------------------------------------
 ;; A Nav-Item-Description is a
 ;; -- {:label String
 ;;     :link String}
+
+;; where :label is the Text that will appear on that nav-button
+;; and :link is the href to which that nav points
 
 ;; ----------------------------------------------------------------------------
 ;; A Nav-Dropdown-Description is a
@@ -21,8 +25,6 @@
 ;; -- Nav-Item-Description
 ;; -- Nav-Dropdown-Description
 
-;; where :title is the Text that will appear on that nav-button
-;; and :link is the href to which that nav points
 ;; ----------------------------------------------------------------------------
 
 (declare render-nav-element)
@@ -37,7 +39,7 @@
 ;; Renders the given description of a nav button as HTML
 (defn render-button [button-desc]
     [:> ($ material-ui :ListItem)
-        {:primaryText (:title button-desc)
+        {:primaryText (:label button-desc)
         :href (:link button-desc)}])
 
 ;; ----------------------------------------------------------------------------
@@ -65,6 +67,11 @@
 ;; Dispatches the :toggle-navbar-expansion event
 (def toggle-nav #(re-frame/dispatch [:toggle-navbar-expansion]))
 
+;; nil -> HTML
+;; generates a login button
+(defn login-button []
+  [:> (.-FlatButton material-ui) {:label "Login"}])
+
 ;; ----------------------------------------------------------------------------
 ;; String & Nav-Description -> HTML
 ;; Takes the Title for the nav-bar and a variable number of Nav-Descriptions
@@ -76,7 +83,8 @@
         [:div
           [:> ($ material-ui :AppBar)
                     {:title title
-                     :onLeftIconButtonTouchTap toggle-nav}]
+                     :onLeftIconButtonTouchTap toggle-nav
+                     :iconElementRight (r/as-element (login-button))}]
             [:> ($ material-ui :Drawer)
                        {:docked false
                         :width 200
