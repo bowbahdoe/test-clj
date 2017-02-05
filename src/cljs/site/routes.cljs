@@ -2,7 +2,9 @@
   (:require-macros [secretary.core :refer [defroute]])
   (:require [secretary.core :as secretary]
             [accountant.core :as accountant]
-            [re-frame.core :as re-frame]))
+            [re-frame.core :as re-frame]
+            [site.views.jobs]
+            [site.views.home]))
 
 (defroute "/home" []
   (re-frame/dispatch [:change-page 'home]))

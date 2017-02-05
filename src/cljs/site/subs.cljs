@@ -12,3 +12,8 @@
   :navbar-expanded?
   (fn [db]
     (:expanded? (:navbar db))))
+
+(re-frame/reg-sub
+  :job-category
+  (fn [db]
+    (:selected-category (:jobs-page db))))

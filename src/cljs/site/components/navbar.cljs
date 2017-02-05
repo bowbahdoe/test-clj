@@ -3,10 +3,10 @@
               [re-com.core :as re-com]
               [reagent.core :as r]
               [reagent.interop :refer-macros [$]]
-              [cljsjs.material-ui]
+              [cljs-react-material-ui.core :refer [get-mui-theme color]]
+              [cljs-react-material-ui.reagent :as ui]
               [site.general :refer [give-indexed-keys]]))
 
-(def material-ui js/MaterialUI)
 ;; ----------------------------------------------------------------------------
 ;; A Nav-Item-Description is a
 ;; -- {:label String
@@ -34,19 +34,20 @@
 (defn dropdown? [nav-description]
   (not (= nil (:contents nav-description))))
 
+
 ;; ----------------------------------------------------------------------------
 ;; Nav-Item-Description -> HTML
 ;; Renders the given description of a nav button as HTML
 (defn render-button [button-desc]
-    [:> ($ material-ui :ListItem)
-        {:primaryText (:label button-desc)
-        :href (:link button-desc)}])
+  [ui/menu-item
+    {:primaryText (:label button-desc)
+     :href (:link button-desc)}])
 
 ;; ----------------------------------------------------------------------------
 ;; Nav-Dropdown-Description -> HTML
 ;; renders the given Nav-Dropdown-Description to HTML
 (defn render-dropdown [dropdown-desc]
-  [:> ($ material-ui :ListItem)
+  [ui/list-item
     {:primaryText (:title dropdown-desc)
                  :initiallyOpen false
                  :primaryTogglesNestedList true
@@ -70,7 +71,7 @@
 ;; nil -> HTML
 ;; generates a login button
 (defn login-button []
-  [:> (.-FlatButton material-ui) {:label "Login"}])
+  [ui/flat-button {:label "Login"}])
 
 ;; ----------------------------------------------------------------------------
 ;; String & Nav-Description -> HTML
@@ -79,16 +80,15 @@
 (defn navbar [title & descs]
   (let [open? (re-frame/subscribe [:navbar-expanded?])]
     (fn [title & descs]
-      [:> ($ material-ui :MuiThemeProvider)
         [:div
-          [:> ($ material-ui :AppBar)
+          [ui/app-bar
                     {:title title
                      :onLeftIconButtonTouchTap toggle-nav
                      :iconElementRight (r/as-element (login-button))}]
-            [:> ($ material-ui :Drawer)
+            [ui/drawer
                        {:docked false
                         :width 200
                         :open @open?
                         :onRequestChange toggle-nav}
-              [:> ($ material-ui :List)
-                (give-indexed-keys (map render-nav-element descs))]]]])))
+              [ui/list
+                (give-indexed-keys (map render-nav-element descs))]]])))

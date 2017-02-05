@@ -4,14 +4,14 @@
                  [reagent "0.6.0" :exclusions [cljsjs/react cljsjs/react-dom]]
                  [re-frame "0.9.0"]
                  [secretary "1.2.3"]
-                 [cljsjs/material-ui "0.16.7-0"]
+                 [cljs-react-material-ui "0.2.37"]
+                 [cljsjs/react-flexbox-grid "0.10.2-1"]
                  [venantius/accountant "0.1.7"
                   :exclusions [org.clojure/tools.reader]]
                  [org.clojure/core.async "0.2.391"]
                  [re-com "0.8.3"]
                  [garden "1.3.2"]
                  [ns-tracker "0.3.0"]
-                 [cljs-css-modules "0.2.1"]
                  [cljs-ajax "0.5.8"]
                  [com.cognitect/transit-cljs "0.8.239"]]
 
