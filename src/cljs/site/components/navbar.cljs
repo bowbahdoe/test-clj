@@ -39,7 +39,7 @@
 ;; Nav-Item-Description -> HTML
 ;; Renders the given description of a nav button as HTML
 (defn render-button [button-desc]
-  [ui/menu-item
+  [ui/list-item
     {:primaryText (:label button-desc)
      :href (:link button-desc)}])
 
